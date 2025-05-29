@@ -106,3 +106,8 @@ number between $0$ and $1$. This gives us a probability that the input belongs
 to one of the two specified classes. We can then apply a decision boundary to
 determine whether the probability is high enough for us to conclude that the
 input belongs to that category.
+
+
+[TF-IDF Pipeline using NLTK](W3/vectorise.ipynb)
+
+[SVM and Logistic Regression using sklearn](W3/classifiers.ipynb)
