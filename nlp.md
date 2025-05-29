@@ -58,3 +58,6 @@ CSV file. Then I trained a simple model to calculate the sine of its single
 input.
 
 [Code](W2/experiment.py)
+
+(The model does well---but only on data within the range of its input! Passing
+$100\pi$ to the model, for example, returns rubbish.

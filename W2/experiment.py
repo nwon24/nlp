@@ -96,3 +96,4 @@ for i in range(epochs):
 
 print(model(torch.tensor([np.pi/6])))
 print(model(torch.tensor([np.pi/2])))
+print(model(torch.tensor([100*np.pi])))
