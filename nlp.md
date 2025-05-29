@@ -61,3 +61,48 @@ input.
 
 (The model does well---but only on data within the range of its input! Passing
 $100\pi$ to the model, for example, returns rubbish.
+
+# Week 3 - Vectorisation and classification algorithms
+To pass text to a classification algorithm or model, it must be vectorised. This
+is because an algorithm can operate on text. Algorithms for turning text into
+numerical input are called vectorisers. 
+
+A simple vectoriser is called Bag of Words, where each word in the text is
+associated with its frequency count in the text. While simple, this approach
+results in common words such as prepositions being weighted higher than other
+words that may be more important to the meaning of the document.
+
+A more complicated approach is called term frequency-inverse document frequency,
+or TF-IDF. This algorithm is applied to a collection of texts (corpus). The term
+frequency, TF, of a particular word in a particular document is $f/n$, where
+$f$ is the number of times the word appears in the document and $n$ is the
+number of words in the document. The inverse document frequency, or IDF, is
+$\log(N/F)$, where $N$ is the number of documents and $F$ is the number of
+documents in which the word appears. The TF-IDF number for that word is the
+product of its TF and IDF scores.
+
+This means that words common to all the documents are given little weighting,
+which is appropriate because words like 'the' appear in virtually everything and
+don't add much meaning to a document. Words that appear frequently in one
+document but not the others will be given a higher weighting, and this is
+appropriate because it's much more likely that word is significant to the
+meaning of that document.
+
+The TF-IDF vectorisers found in tookits such as `sklearn` implement smoothing
+and other normalisation to change the TF-IDF scores slightly from the simplistic
+model described above, but the idea is the same.
+
+Once a corpus has been vectorised, it can be fed into a classification
+algorithm. One such algorithm is called logistic regression, which is similar to
+linear regression except that the output is often binary (categorial), not
+continous. This is useful, for example, in classifying whether an email is spam
+or not, or whether a movie review is positive or negative.
+
+The idea is to take an input vector, say $x$, and then apply a linear
+transformation to it in the form $z=w\cdot x+b$, where $\cdot$ represents the
+dot product. However, this $z$ could be any real number, and therefore we then
+pass it to the function $$\sigma(z)=\frac{1}{1+e^{-z}}$$ which spits out a
+number between $0$ and $1$. This gives us a probability that the input belongs
+to one of the two specified classes. We can then apply a decision boundary to
+determine whether the probability is high enough for us to conclude that the
+input belongs to that category.
