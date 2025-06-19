@@ -125,6 +125,7 @@ the models' predictions were different to the actual label, I have saved those
 reviews to separate files for analysis.
 
 [SVM Model Results](W3/SVM_results.md)
+
 [Logistic Regression Model Results](W3/log_results.md)
 
 Some of the predictions seem to be plain wrong; but others seem to be wrong when
