@@ -107,7 +107,27 @@ to one of the two specified classes. We can then apply a decision boundary to
 determine whether the probability is high enough for us to conclude that the
 input belongs to that category.
 
+The weights and biases that go into the linear transformation of the input are
+given by stochastic gradient descent.
+
+Another classification algorithm is called Support Vector Machine (SVM). In this
+method inputs are represented as points in $n$-dimensional space, and the idea
+is to find the hyperplane that best separates the two groups of data. This is done
+by maximising the distance between the hyperplane to its closest points.
 
 [TF-IDF Pipeline using NLTK](W3/vectorise.ipynb)
 
 [SVM and Logistic Regression using sklearn](W3/classifiers.ipynb)
+
+This week I used both of these classifiers on some reviews on Amazon. 
+The corpus was split into two categories: positive and negative reviews. Where
+the models' predictions were different to the actual label, I have saved those
+reviews to separate files for analysis.
+
+[SVM Model Results](W3/SVM_results.md)
+[Logistic Regression Model Results](W3/log_results.md)
+
+Some of the predictions seem to be plain wrong; but others seem to be wrong when
+there is some subtlety or nuance to the review's overall opinion. For example, in
+one review, a book was praised as an overall `good read' but most of it was spent
+criticising the style of the author.
