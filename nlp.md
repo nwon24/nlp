@@ -132,3 +132,9 @@ Some of the predictions seem to be plain wrong; but others seem to be wrong when
 there is some subtlety or nuance to the review's overall opinion. For example, in
 one review, a book was praised as an overall `good read' but most of it was spent
 criticising the style of the author.
+
+# Neural networks for text classification
+
+This week I moved on from baseline models to neural networks. 
+
+[CNN text classifier](W4/cnn.ipynb)
