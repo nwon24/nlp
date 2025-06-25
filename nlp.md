@@ -133,8 +133,43 @@ there is some subtlety or nuance to the review's overall opinion. For example, i
 one review, a book was praised as an overall `good read' but most of it was spent
 criticising the style of the author.
 
-# Neural networks for text classification
+# Week 4 - Neural networks for text classification
 
 This week I moved on from baseline models to neural networks. 
 
+Convolutional Neural Networks have the same basic structure as other neural
+networks: the input, a series of hidden layers in which transformations are made
+to the data via weights and biases, and then the output layer. 
+
+A convolutional neural network is a special type of neural network in which some
+of the layers are convolutional layers. This means instead of connecting every
+neuron in the previous layer to every neuron in the next (fully connected
+layer), the next layer is obtained by sliding a 'window' called the kernel or
+filter over the input layer; this window consists of weights and biases that are
+applied to the part of the input over which the kernel covers. 
+Thus the next layer consists of the outputs of these convolutions. 
+The idea is that different filters can recognise different features of the
+input. The CNN is built up of several convolutional layers, each with multiple
+filters, each recognising different aspects of the input. 
+
+To avoid overfitting, a technique called pooling is used, in which the size of
+the output of a convolutional layer is reduced by taking the average or maximum
+of a group of outputs, increasing computational efficiency in the process.
+A CNN often ends with fully connected layers, which take the output of the
+previous convolutional and pooling layers to produce the final output of the
+network.
+
+CNNs are often used for image recognition--two dimensional data. In this case I
+have built a CNN for my one dimensional input data, which is just text. The text
+is vectorised using TF-IDF, and the input to the network consists of a tensor of
+TF-IDF values. The final output layer of the CNN has only one neuron, as the
+task is classifying whether the text is positive or negative: the closer to 1,
+the higher the chance of the text being positive.
+
 [CNN text classifier](W4/cnn.ipynb)
+
+With only a single convolutional and fully connected layer, the validation test
+results reach about the same level of accuracy as the baseline model (around
+86%). Increasing the number of epochs or the number or layers only resulted in
+the validation accuracy decreasing due to overfitting. To increase the accuracy
+of the model, it is likely more data is needed.
