@@ -173,3 +173,6 @@ results reach about the same level of accuracy as the baseline model (around
 86%). Increasing the number of epochs or the number or layers only resulted in
 the validation accuracy decreasing due to overfitting. To increase the accuracy
 of the model, it is likely more data is needed.
+
+(Strangely, the model gets stuck using PyTorch but not Keras... Even with
+PyTorch as the backend for Keras.)
