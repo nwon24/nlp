@@ -176,3 +176,16 @@ of the model, it is likely more data is needed.
 
 (Strangely, the model gets stuck using PyTorch but not Keras... Even with
 PyTorch as the backend for Keras.)
+
+## Strange issue
+
+The PyTorch network doesn't seem to be learning at all---the cost is always around 0.7
+or thereabouts, and no changes to any of the hyperparameters seems to affect it.
+This is true with both the CNN and the simple fully connected network. However, when
+the network is implemented using Keras and run on the same input data (TF-IDF
+vectorisation of the dataset), the model does seem to learn and the validation accuracy
+reaches around 85% (roughly on par with the baseline classifiers). And using PyTorch
+as the Keras backend gives the same result...
+
+A head scratcher, for now.
+[CNN text classifier with Amazon reviews](W4/amazon_review_polarity_csv/cnn_Amazon.ipynb)
