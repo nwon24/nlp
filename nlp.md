@@ -189,3 +189,8 @@ as the Keras backend gives the same result...
 
 A head scratcher, for now.
 [CNN text classifier with Amazon reviews](W4/amazon_review_polarity_csv/cnn_Amazon.ipynb)
+
+After fiddling around with the learning rate, the manual implementation seems to work
+with a learning rate of $10^{-3}$. Mysteriously, sometimes the cost won't go
+anywhere and remains stuck at around 0.7, other times it will jump around but
+decrease overall, resulting in validation test accuracy of around 83%.
