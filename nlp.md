@@ -194,3 +194,29 @@ After fiddling around with the learning rate, the manual implementation seems to
 with a learning rate of $10^{-3}$. Mysteriously, sometimes the cost won't go
 anywhere and remains stuck at around 0.7, other times it will jump around but
 decrease overall, resulting in validation test accuracy of around 83%.
+
+# Week 5 - RNNs and LSTMs
+
+Normal neural networks assume that each piece of data in the input is independent
+of the other pieces of data. Unfortunately, this assumption is not correct for
+textual data, because often the meaning of a word or phrase depends on the words
+that have come before it. To a human this idea of context is intuitive; but
+traditional neural networks are unable to capture this link.
+
+Recurrent Neural Networks (RNNs) are a kind of neural network that aims to solve
+this problem. As such, they are often used on streams of textual data to predict
+the next word at the end of a phrase or sentence. 
+
+RNNs work by keeping a 'memory' of the input data that has been received up
+until a particular time; RNNs work in time steps, with each time step involving
+the processing of one piece of the input (e.g., the next word). The processing
+of each piece of input is done by 'cells.' The idea behind a RNN is that each
+cell accepts the next piece of input and produces an output called the 'hidden
+state' that is then fed into the next cell, taking into account its memory of
+what has occured in the previous time steps. As with CNNs, the output of the
+recurrent layers is fed into a dense layer that spits out the output required by
+the network.
+
+How these cells actually work relates to the particular type of RNN being used.
+One type of RNN is called Long Short-Term Memory (LSTM) and is the network I
+tried to implement this week for my text classification problem.
