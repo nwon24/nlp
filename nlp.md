@@ -220,3 +220,30 @@ the network.
 How these cells actually work relates to the particular type of RNN being used.
 One type of RNN is called Long Short-Term Memory (LSTM) and is the network I
 tried to implement this week for my text classification problem.
+
+## Embeddings
+
+One thing not done in the previous weeks' foray into text classification using NNs
+was the inclusion of an embedding layer. In this case it was necessary because
+the input to the LSTM needs to be sequential. In earlier weeks the input
+consisted of sparse arrays of vectorised texts (using TF-IDF), where each word
+always occupied the same index in the array. However, this completely disregards
+the sequential aspect of text processing, as well as the relationship that might
+arise between words in the context of a particular review. Word embeddings are a
+way to solve this problem.
+
+First I used a vectoriser to create a dictionary of unique words in the corpus,
+assigning to each word an integer or index. Then I converted each piece of text
+into an array of indices to represent the words, padding them to be the same
+length as the longest review. This could be passsed directly into a network, but
+no success was achieved. :(
+
+Then I found out about embeddings, which are a way of converting those arrays of
+indices into higher dimensional vectors, whose entries are initialised randomly.
+As the network learns, the entries in those vectors are fine-tuned (learned) to
+reflect more accurately the semantic relationships between the words in the
+text. So essentially the embedding layer is just another layer in the network,
+which takes as input a list of indices (or this can be thought of as a large
+matrix of zeroes with a single 1 indicating which word is represented) and
+applied a linear transformation to it via the embedding matrix to output a
+vector for each word in the text. This output is then fed into the LSTM layer.
