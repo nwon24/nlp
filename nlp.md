@@ -247,3 +247,70 @@ which takes as input a list of indices (or this can be thought of as a large
 matrix of zeroes with a single 1 indicating which word is represented) and
 applied a linear transformation to it via the embedding matrix to output a
 vector for each word in the text. This output is then fed into the LSTM layer.
+
+## How LSTMs work
+
+An LSTM layer consists of a series of LSTM cells, each of which process each piece
+of input data for for each time step. As input is fed through the LSTM,
+something called the cell state is maintained, which acts like the memory of the
+LSTM. Each cell produces an output called the hidden state, which is then fed
+into the next cell as part of its input.
+
+So each LSTM cell takes three pieces of input: $h_{t-1}$, the previous hidden
+state, $c_{t-1}$, the previous cell state, and $x_t$, the current input. These
+three pieces of data are fed through three 'gates':
+
+- forget gate: this decides which information in the cell state is relevant (and
+  ''forgets'' the rest);
+- input gate: this decides which information in the input ($x_t$) is relevant
+  and then uses it to produce a new cell state;
+- output gate: this determines the hidden state to be output from the cell,
+  given the new cell state.
+
+### The forget gate
+
+To ease notation, denote by $L(x)$ a linear transformation of the vector $x$
+with a set of weights and a bias. Pointwise multiplication is denoted by
+$\otimes$ and pointwise addition is denoted by $\oplus$.
+
+The computation for this gate is $$f_t=\sigma(L(x_t)+L(h_{t-1})).$$
+The values in $f_i$ are between $0$ and $1$, and so multiplying this with $c_t$
+pointwise effectively ''forgets'' some of its values and ''remembers'' others. 
+
+### The input gate
+
+We now need to decide how to update the cell state. The change to the cell state
+is given by $$\Delta c_t=\tanh(L(h_{t-1})+L(x_t)).$$
+In other words, we compute the change to the cell state via a linear
+transformation of the two inputs, $H_{t-1}$ and $x_t$; but we also want to make
+sure that the irrelevant parts of the input are forgotten. This is achieved by
+computing $$i_t=\sigma(L(h_{t-1})+L(x_t));$$
+that is, another sigmoid activate linear layer, but with a different set of
+weights and biases to the forget gate. 
+Note that $\tanh$ is used because the output is between $-1$ and $1$; this is
+because we might want to decrease some of the values in the cell state as well
+as add them.
+
+Thus, to compute the new cell state, we first forget some of the old cell state,
+decide which parts of $\Delta c_t$ we want to keep, and then pointwise add the
+two vectors together, viz. $$c_t=c_{t-1}\otimes f_t\oplus\Delta c_t\otimes i_t.$$
+
+### The output gate
+
+We want to now output some part of the cell state---but only the part most
+relevant to the input and previous hidden state. So we compute, again,
+$$o_t=\sigma(L(h_{t-1})+L(x_t))$$ and then spit out the new hidden state
+$$h_t=o_t\otimes\tanh(c_t).$$ (Here $\tanh$ is used to normalise the hidden
+states.)
+
+And that's it! This new hidden state is then fed into the next LSTM cell with
+the next input, and this along with the current cell state goes through all the
+same operations again. 
+
+## Project update
+
+Finally got the homebaked LSTM to work---accuracy approximately 82%. I needed to
+flatten the output of the LSTM differently so that all timesteps was passed to the
+dense layer; with this fix somehow the model started to actually train.
+
+[Text classifier using LSTM in PyTorch and Keras](W5/LSTM.ipynb)
