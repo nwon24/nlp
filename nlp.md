@@ -314,3 +314,27 @@ flatten the output of the LSTM differently so that all timesteps was passed to t
 dense layer; with this fix somehow the model started to actually train.
 
 [Text classifier using LSTM in PyTorch and Keras](W5/LSTM.ipynb)
+
+# Week 6
+
+This week was about using pretrained word embeddings.
+
+One method of generating word embeddings is Word2Vec. This is a simple 2-layer
+neural network, with the input being sparse one-hot encoded arrays (or perhaps
+indices) and the output being either a target word or its context.
+The two main ways in which the embeddings are developed are called Continuous
+Bag-of-Words (CBOW) and Skipgram. The former predicts a target word based on the
+surrounding sentence as input, whereas the latter predicts the context based on
+the target word. The weights of this network are the word embeddings. 
+
+I grabbed Google's massive pretrained Word2Vec embeddings and loaded them into
+my LSTM model using `nn.Embedding.from_pretrained`. I also collected validation
+test data for the different epochs to make a plot. With the pretrained
+embeddings and setting the `freeze` parameter to `False` (allowing the
+pretrained embeddings to be upated during the training of the model), the
+validation test accuracy creeped up to around 89%. With the same set of samples
+and values for the hyperamaters the vanilla LSTM model from last week only got
+up to around 86%. 
+
+TODO: try larger number of samples (if it doesn't crash Google Colab) and
+pretrained embeddings using other methods (e.g., GloVe).
