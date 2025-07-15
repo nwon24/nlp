@@ -319,13 +319,17 @@ dense layer; with this fix somehow the model started to actually train.
 
 This week was about using pretrained word embeddings.
 
+## Word2Vec
+
 One method of generating word embeddings is Word2Vec. This is a simple 2-layer
 neural network, with the input being sparse one-hot encoded arrays (or perhaps
-indices) and the output being either a target word or its context.
-The two main ways in which the embeddings are developed are called Continuous
-Bag-of-Words (CBOW) and Skipgram. The former predicts a target word based on the
-surrounding sentence as input, whereas the latter predicts the context based on
-the target word. The weights of this network are the word embeddings. 
+indices) and the output being either a target word or its context.  The two main
+ways in which the embeddings are developed are called Continuous Bag-of-Words
+(CBOW) and Skipgram. The former predicts a target word based on the surrounding
+sentence as input, whereas the latter predicts the context based on the target
+word. The weights of this network are the word embeddings. The 'window' in the
+training method is the number of words on either side of the target/input word
+to be taken as context with either the CBOW or the Skipgram method. 
 
 I grabbed Google's massive pretrained Word2Vec embeddings and loaded them into
 my LSTM model using `nn.Embedding.from_pretrained`. I also collected validation
@@ -338,3 +342,16 @@ up to around 86%.
 
 TODO: try larger number of samples (if it doesn't crash Google Colab) and
 pretrained embeddings using other methods (e.g., GloVe).
+
+## GloVe
+
+GloVe (Global Vectors) is an extension to the Word2Vec method. In addition to
+the usual algorithm, a large co-occurence matrix is maintained, in which the
+entries count how many times each word appears next to every other word in the
+corpus (or in the context window for window sizes greater than unity). If we let
+this co-occurence count be $X_{ij}$ for words $i$ and $j$, then the algorithm
+tries to minimise the function $$J=\sum_{i,j}f(X_{ij})(w_i\cdot
+w_j+b_i+b_j-\log(X_{ij}))^2,$$
+where $w_i$ and $w_j$ are the embedding vectors (weights) for the words and $f$
+is a weighting function designed to reduce the impact of frequent words that
+don't add much semantic meaning.
