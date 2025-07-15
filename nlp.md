@@ -343,6 +343,8 @@ up to around 86%.
 TODO: try larger number of samples (if it doesn't crash Google Colab) and
 pretrained embeddings using other methods (e.g., GloVe).
 
+[LSTM with pretrained Word2Vec Embedding](W6/LSTM_WordEmbeddings.ipynb)
+
 ## GloVe
 
 GloVe (Global Vectors) is an extension to the Word2Vec method. In addition to
@@ -355,3 +357,5 @@ w_j+b_i+b_j-\log(X_{ij}))^2,$$
 where $w_i$ and $w_j$ are the embedding vectors (weights) for the words and $f$
 is a weighting function designed to reduce the impact of frequent words that
 don't add much semantic meaning.
+
+[LSTM with pretrained GloVe Embedding](W6/LSTM_GloVe.ipynb)
