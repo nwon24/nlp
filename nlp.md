@@ -343,6 +343,10 @@ up to around 86%.
 TODO: try larger number of samples (if it doesn't crash Google Colab) and
 pretrained embeddings using other methods (e.g., GloVe).
 
+Update: somehow 100000 samples is no longer too much for the runtime. However,
+the results for this were similar---maximum accuracy remained around 89% for
+the same set of hyperperameters.
+
 [LSTM with pretrained Word2Vec Embedding](W6/LSTM_WordEmbeddings.ipynb)
 
 ## GloVe
