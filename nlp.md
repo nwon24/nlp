@@ -1,4 +1,73 @@
-# Introduction to NLP
+% Miniproject: Natural Language Processing
+% Nathan Wong
+% Semester 1, 2025
+
+---
+documentclass: report
+hyperrefoptions: linktoc=all
+indent: true
+---
+
+# Project overview and summary
+
+The aim of this miniproject was to learn the basics of neural networks as
+applied to a simple problem in natural language processing: text classification.
+Textual ideas such as tokenisation, lemmatisation, and stop words was the first
+focus. Then the project moved onto converting textual data into numerical inputs
+via vectorization, with TF-IDF vectorization being used as inputs to the first
+couple of classification models. Early work involved the Python NLTK library
+before moving on to SKlearn.
+
+Baseline machine learning models such as logistic regression and support vector
+machine were used as a first taste of classification algorithms. The
+fundamentals of deep learning were then introduced, with one week devoted to
+learning the basics of PyTorch. Throughout the rest of the project Keras would
+also be used as an easier, higher-level way to implement the variety of the
+deep learning models.
+
+The bulk of the project consisted of implementing different neural networks for
+text classification and comparing their performance across different training
+data sizes, hyperperamaters, and network depth. These networks included a
+one-dimensional CNN, an LSTM, an LSTM with pretrained word embeddings using both
+Word2Vec and GloVe, and then finally a pretrained BERT. The corpus used
+throughout was a set of Amazon reviews of various products, classified as either
+positive or negative reviews. The entire corpus being much too large to fit into
+Google Colab's runtime, selections of 20000, 50000, and even 100000 reviews were
+fed into the models, as long as the runtime didn't crash.
+
+Throughout the project the goal was to increase the performance of the various
+models. The baseline models were around 85% accurate on validation test data,
+with initial feed-forward networks and CNNs underperforming in comparison. This
+was likely due to not enough training samples (limited by the computing
+environment), the requirement for simple networks (again limietd by computing
+environment), and unoptimised hyperparameters. Additionally, it was found that
+traditional neural networks are unable to take into account the text as a
+sequence of tokens, and as context plays a heavy role in the meaning of language
+this was a detriment to model performance. However, this part of the project
+nevertheless resulted in much exploration of the internal architecture of a CNN,
+including the central idea of a convolution, the importance of pooling and
+dropping layers, and the calculations required to determine the number of inputs
+in each successive layer given parameters such as the kernel size, stride
+length, and padding.
+
+From there a simple LSTM was implemented with word embeddings (not pretrained).
+The internal workings of an LSTM were thoroughly investigated, with particular
+emphasis placed on learning how they are able to take into account the
+sequential nature of natural language through their processing of the data in
+time steps through LSTM cells. Initial performance was only marginally better
+than the CNN; but once pretrained embeddings were used, accuracy increased to
+just under 90%. 
+
+
+What follows is a project log, in which I document not only what I did but also
+my understanding of various concepts as I learnt them---including the basic
+concepts of natural language; how neural networks learn at a basic, mathematical
+level; how Python libraries such as `torch`, `keras`, and `sklearn` can be used
+to implement models, the internal architecture and advantages or disadvantages
+of CNNs, LSTMs, and transformers; and the effect of hyperparameters on model
+training and performance.
+
+# Week 1: Introduction to NLP
 
 Natural Language Processing (NLP) uses artifical intelligence to
 understand and generate text in human languages. NLP is already
@@ -30,7 +99,89 @@ A plot of the frequency distribution is also generated and saved to a file.
 
 [Code](W1/textstats.py)
 
-# Week 2 - PyTorch
+# Week 2: Deep learning and PyTorch
+
+## Deep learning and neural networks
+
+*(Appended here a few weeks down the road, after having learnt more about the
+whole idea.)*
+
+Deep learning is a subfield of machine learning in which models learn via
+multiple layers of units called 'neurons', in a nod to the structure of the
+human brain. The model learns by mathematically tweaking a set of parameters
+called weights and biases that affect what output is produced by the model given
+a particular input. The set of layers of neurons and the weights and biases are
+called a neural network.
+
+There are many different kinds of neural networks, but here is an overview of
+the basic idea.
+
+The central concept is that of a neuron, which is just a cell holding a real
+number. A series of neurons makes up a layer of the network. In a traditional,
+fully-connected neural network, each neuron is connected to every neuron in the
+previous layer. These connections hold weights, and they provide a formula for
+how to obtain the value of this neuron from the neurons in the previous layer.
+This formula is just a weighted sum of the neurons in the previous layer, plus
+an extra term called the bias. In essence, the calculation being performed is a
+linear transformation of the previous layer---this makes it easy to do calculus
+down the road.
+
+Let's get more concrete. Suppose in layer $i$ the neurons are
+$x^i_1,x^i_2,\ldots,x^i_n$ with associated weights $w^i_1,w^i_2,\ldots,w^i_n$.
+Let the bias associated with neuron $k$ in layer $j$ be $b^j_k$. From the
+preceding discussion, the value of the neuron $x^{i+1}_k$ is
+$$x^{i+1}_k=\sum_{t=1}^n x^i_tw^i_t+b^{i+1}_k.$$
+
+But if we only ever perform linear transformations on our data, non-linear
+relationships are going to be impossible for the model to learn. Therefore, we
+need to introduce some kind of non-linearity to the network. This is done by
+passing the weighted sum through an 'activation function'. Common activations
+functions include the sigmoid function, $$\sigma(z)=\frac{1}{1+e^{-z}},$$ and
+the ReLU function, $$\text{ReLU}(z)=\max(0,z).$$ So we can refine our previous
+formula to be 
+$$x^{i+1}_k=f\left(\sum_{t=1}^n x^i_tw^i_t+b^{i+1}_k\right)$$
+where  $f$ is some activation function of our choosing. Some activation
+functions will be better than others, depending on the context and the specific
+kind of neural network being trained.
+
+We can package all the weights corresponding to the previous layer for the
+neuron $x^{i+1}_k$ into a column matrix denoted by $W^{i+1}_k$ and all the previous layer
+neurons into another column matrix denoted by $X^{i}$. Then the calculation
+becomes a simple dot product: 
+$$x^{i+1}_k=f\left(W^{i+1}_k\cdot X^{i}\right).$$
+
+Even better, we can put the column vectors $W^{i+1}_k$ for all $k$ from $1$ to
+$n$ into a matrix $W^{i+1}$ of dimension $n_i\times n_{i+1}$, where $n_i$ and $n_{i+1}$ are
+number of neurons in layers $i$ and $i+1$, and the biases for each neuron in
+layer $i+1$ into a column matrix $b^{i+1}$. Then *every* neuron in layer $i+1$
+can be calculated via simple matrix multiplication:
+$$X^{i+1}=f\left({W^{i+1}}^TX^i+b^{i+1}\right).$$
+
+The neurons in the first layer are the inputs to the network. For example, if
+the network was going to recognise images that were 32 by 32 pixels in size, the
+first layer would have 1024 neurons. The final layer depends on what we want the
+network to do with the input. For example, if we were classifying the images as
+either 'dog' or 'not a dog', the output layer might have a single neuron, with
+its value corresponding to the probability that the model thinks that image
+is a dog or not.
+
+## Gradient descent and backpropagation
+
+Initially, the weights and biases of a network are random, and so its output is
+basically guaranteed to be nonsese. So how does the network learn? 
+
+The idea is to treat the network has a function of an enormous number of
+variables---one for each weight and bias. This is because the weights and biases
+are the only parameters that can be tweaked to make the network perform better.
+What we also need is a measure of how well the model is currently performing;
+this is provided by something called the 'cost function.'
+
+The cost function is a function that takes in the output of the neural network
+as well as the expected output, and then computes a numerical value that
+indicates how far from the expected output the model's output is.
+
+## PyTorch
+
 The basics of using PyTorch to create a neural network is as follows.
 
 - Import training and testing data using the `Dataset` class and wrap it up with
@@ -60,9 +211,10 @@ input.
 [Code](W2/experiment.py)
 
 (The model does well---but only on data within the range of its input! Passing
-$100\pi$ to the model, for example, returns rubbish.
+$100\pi$ to the model, for example, returns rubbish.)
 
-# Week 3 - Vectorisation and classification algorithms
+# Week 3: Vectorisation and classification algorithms
+
 To pass text to a classification algorithm or model, it must be vectorised. This
 is because an algorithm can operate on text. Algorithms for turning text into
 numerical input are called vectorisers. 
@@ -133,7 +285,7 @@ there is some subtlety or nuance to the review's overall opinion. For example, i
 one review, a book was praised as an overall `good read' but most of it was spent
 criticising the style of the author.
 
-# Week 4 - Neural networks for text classification
+# Week 4: Neural networks for text classification
 
 This week I moved on from baseline models to neural networks. 
 
@@ -195,7 +347,7 @@ with a learning rate of $10^{-3}$. Mysteriously, sometimes the cost won't go
 anywhere and remains stuck at around 0.7, other times it will jump around but
 decrease overall, resulting in validation test accuracy of around 83%.
 
-# Week 5 - RNNs and LSTMs
+# Week 5: RNNs and LSTMs
 
 Normal neural networks assume that each piece of data in the input is independent
 of the other pieces of data. Unfortunately, this assumption is not correct for
@@ -315,7 +467,7 @@ dense layer; with this fix somehow the model started to actually train.
 
 [Text classifier using LSTM in PyTorch and Keras](W5/LSTM.ipynb)
 
-# Week 6
+# Week 6: Pretrained embeddings
 
 This week was about using pretrained word embeddings.
 
