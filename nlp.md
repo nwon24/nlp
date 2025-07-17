@@ -66,7 +66,10 @@ concepts of natural language; how neural networks learn at a basic, mathematical
 level; how Python libraries such as `torch`, `keras`, and `sklearn` can be used
 to implement models, the internal architecture and advantages or disadvantages
 of CNNs, LSTMs, and transformers; and the effect of hyperparameters on model
-training and performance.
+training and performance. All code can be found
+[here](https://github.com/nwon24/nlp) and the dataset for the text
+classification problem can be found
+[here](https://www.kaggle.com/datasets/kritanjalijain/amazon-reviews).
 
 # Week 1: Introduction to NLP
 
