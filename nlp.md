@@ -178,7 +178,84 @@ this is provided by something called the 'cost function.'
 
 The cost function is a function that takes in the output of the neural network
 as well as the expected output, and then computes a numerical value that
-indicates how far from the expected output the model's output is.
+indicates how far from the expected output the model's output is. A simple and
+commonly used loss function is the mean squared error, which is just the average
+of the square of the deviations of the prediction from the expected output. (We
+square the differences rather than taking the absolute value again because that
+is more friendly for calculus.) If $Y$ is the vector for the expected output and
+$\hat{Y}$ is the prediction, the mean squared error can be calculated by the
+formula $$\frac{1}{n}\sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2.$$
+
+What's important is that the smaller the cost function, the closer the
+prediction to the expected output. So we want to tweak the weights and biases
+to minimise the cost function. This is a classical optimisation problem that
+calculus is an excellent tool for solving. 
+
+Let's call the cost function $C$. Its inputs are the expected output and every
+single weight and bias of the model. The expected output is not really a
+variable because, given a particular input, it doesn't change and so we can
+consider $C$ as a function of all the weights and biases only. We then compute
+the *gradient*, $\nabla C$, of this multivariate function---that is, we compute
+a vector whose entries are the partial derivatives of $C$ with respect to all
+the weights and biases. The gradient of a function of $n$ variables gives the
+direction in Euclidean $n$ space in which the function increases most rapidly;
+therefore the negative of the gradient gives the direction in which the function
+*decreases* most rapidly. So if $W$ is a vector containing all the weights and
+biases of the model, we update $W$ to get more favourable values (that is, lower
+cost) of the weights and biases by setting it equal to $W-\nabla C$. Rinse and
+repeat and over time, (we hope) the weights and biases will converge to the
+values that minimise the cost function and thus produce the desired output from
+a given input. This mathematical idea is called gradient descent.
+
+To actually compute the gradient of a function with so many variables, an
+algorithm called backpropagation is used. Conceptually, this means starting by
+calculating the partial derivatives with respect to the weights, biases, and
+activations in the final layer, and then using those values to calculate the
+partial derivatives of the previoius layer, and so on.
+
+Let's go back to the equation
+$$x^{i+1}_k=f\left(\sum_{t=1}^{n_{i}} x^i_tw^i_t+b^{i+1}_k\right).$$
+From the chain rule
+$$\frac{\partial C}{\partial w^i_j}=\frac{\partial C}{\partial
+x^{i+1}_k}\frac{\partial x^{i+1}_k}{\partial w^i_j}$$
+with $\frac{\partial C}{\partial x^{i+1}_k}$ already known from performing the
+algorithm on a previous layer and 
+$$\frac{\partial x^{i+1}_k}{\partial w^i_j}=f'\left(\sum_{t=1}^{n_{i}} x^i_tw^i_t+b^{i+1}_k\right)\times x^i_j.$$
+Similarly
+$$\frac{\partial C}{\partial b^{i+1}_k}=\frac{\partial C}{\partial
+x^{i+1}_k}\frac{\partial x^{i+1}_k}{\partial b^{i+1}_k}$$
+and 
+$$\frac{\partial x^{i+1}_k}{\partial b^{i+1}_k}=f'\left(\sum_{t=1}^{n_{i}} x^i_tw^i_t+b^{i+1}_k\right)\times 1.$$
+Although not needed for the gradient $\nabla C$, we also compute, for each neuron $m$
+in the previous layer,
+$$\frac{\partial C}{\partial x^i_m}=\sum_{k=1}^{n_{i+1}}\frac{\partial C}{\partial
+x^{i+1}_k}\frac{\partial x^{i+1}_k}{\partial x^i_m}$$
+with
+$$\frac{\partial x^{i+1}_k}{\partial x^i_m}=f'\left(\sum_{t=1}^{n_{i}} x^i_tw^i_t+b^{i+1}_k\right)\times w^i_m.$$
+Note that there is a sum here because the neuron $x^i_m$ appears in the
+calculation for every neuron in layer ${i+1}$, so using the chain rule
+requires us to sum over all the neurons in layer ${i+1}$.
+
+By computing $\frac{\partial x^{i+1}_k}{\partial x^i_m}$ for each $m$ in the
+previous layer, we can now compute the partial derivatives with respect to the
+weights and biases of the previous layer exactly as we have just done for this
+layer.
+
+What happens when we start out, at the final layer? In that case we haven't
+already computed the partial derivatives with respect to the neurons in the
+layer in front, because there is no layer in front; but we can appeal directly
+to the derivative of the cost function because the final layer neurons are
+inputs in the cost function.
+
+There's one final catch. Training the model doesn't rely on a single training
+example---often the examples come in batches. So the gradient for each example
+in a batch is computed, and then averaged to get the overall gradient for that
+particular batch. In symbols, $$\nabla C=\frac{1}{n}\sum_{i=1}^n\nabla C_i$$
+where $n$ is the batch size and $\nabla C_i$ is the gradient computed from the
+output of the model on the $i$th input in the batch. Of course, the larger the
+batch size the closer the gradient to the true gradient; but the whole process
+becomes more computationally expensive. This idea, of calculating the gradient
+from batches, is called stochastic gradient descent.
 
 ## PyTorch
 
