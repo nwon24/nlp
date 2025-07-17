@@ -410,7 +410,7 @@ of the model, it is likely more data is needed.
 (Strangely, the model gets stuck using PyTorch but not Keras... Even with
 PyTorch as the backend for Keras.)
 
-## Strange issue
+## Project update
 
 The PyTorch network doesn't seem to be learning at all---the cost is always around 0.7
 or thereabouts, and no changes to any of the hyperparameters seems to affect it.
@@ -596,3 +596,71 @@ is a weighting function designed to reduce the impact of frequent words that
 don't add much semantic meaning.
 
 [LSTM with pretrained GloVe Embedding](W6/LSTM_GloVe.ipynb)
+
+# Week 7: Transformers and BERT
+
+The next level up from LSTMs with pretrained embeddings is transformers.
+Transformers are a deep learning architecture that have revolutionised the field
+since becoming established in a famous 2017 paper titled 
+['Attention is All You Need'](https://arxiv.org/abs/1706.03762). Transformers
+evolve on RNNs via a mechanism known as attention, which allows it to deduce
+dependencies over a much larger range than even LSTMs. Moreover, the
+architecture of a transformer is well suited to parallel computation, allowing
+them to take full advantage of GPUs and therefore also the advantages of massive
+amounts of training data.
+
+Transformers accept tokens as embeddings, with an additional positional encoding
+added to each embedding vector to encode where that token belongs in the context
+of the entire input text. 
+
+These embedding vectors then pass through a series of attention layers and
+feedforward neural networks. The attention layers are where the model learns
+about the relationship between different tokens in the input text.
+
+In a single head of attention, each embedding vector is transformed by a matrix
+of weights, $W_Q$, that produces a 'query' vector. This vector can be thought of
+as a piece of information that the model is searching for. Similarly, there is
+another matrix of weights, $W_K$, that produce a series of 'key' vectors, which
+are like the answers to those queries. If a key vector matches a query vector,
+then that token is relevant to the query. The actual meaning of the queries is
+quite obtuse, because the model learns to query the information it needs to for
+the cost of its prediction to decrease; but it might be something like whether
+there is a new proper noun nearby that might modify a token representing a
+relative pronoun.
+
+If we denote by $Q$ the matrix of all query vectors and $K$ the matrix of all
+key vectors, the matrix $Q^TK$ gives a matrix in which the entries correspond to
+how strongly queries are answered by particular keys. For some obscure reason,
+in the original paper, this matrix is scaled down by $\sqrt{d_k}$, the dimension
+of the query/key space (a user-supplied parameter).
+
+Since the numbers in this attention matrix can be arbitrarity large, they are
+then passed column wise into the $\text{softmax}$ function, which turns each
+column into a probability distribution. This distribution can be thought of as
+expressing how likely a particular key is to answer a particular query. These
+probabilities can also be thought of as weights. The softmax function is given
+by $$\text{softmax}(z)=\frac{e^z}{\sum e^{z_i}}.$$
+
+What to do with these weights? These weights express how likely a particular key
+is to answering a particular query. A third matrix of weights, called the value
+matrix and denoted by $W_V$, is then multiplied by every embedding to create a
+series of value vectors. These vectors can be thought of as describing what
+needs to be added on to a particular embedding vector to move that vector in a
+direction in the embedding space that aligns more closely with the token
+associated with the key. The weights calculated in the attention matrix decide
+which parts of each value vector will contribute to a change in a particular
+embedding, so we simply have to multiply the attention matrix by the matrix
+whose columns are value vectors. This means the output of
+a single head of attention, given query, key, and value matrices $Q$, $K$, and
+$V$ respectively, is
+$$\text{Attention}(Q,K,V)=\text{softmax}\left(\frac{Q^TK}{\sqrt{d_k}}\right)V$$
+where $d_k$ is the number of dimensions in the query/key space.
+The columns of this output are then added to the embedding vectors to update
+them, and that's a single head of attention complete!
+
+Each attention block in a transformer then has multiple heads of attention
+running in parallel, each with different query, key, and value matrices. And
+this is where transformers harness the parallel computing power of GPUs. The
+reason for multiple attention heads is for the model to learn how context
+affects the meaning of the tokens in as many different ways as possible.
+
