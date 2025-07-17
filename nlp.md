@@ -609,6 +609,8 @@ architecture of a transformer is well suited to parallel computation, allowing
 them to take full advantage of GPUs and therefore also the advantages of massive
 amounts of training data.
 
+## Transformer architecture
+
 Transformers accept tokens as embeddings, with an additional positional encoding
 added to each embedding vector to encode where that token belongs in the context
 of the entire input text. 
@@ -656,11 +658,52 @@ $V$ respectively, is
 $$\text{Attention}(Q,K,V)=\text{softmax}\left(\frac{Q^TK}{\sqrt{d_k}}\right)V$$
 where $d_k$ is the number of dimensions in the query/key space.
 The columns of this output are then added to the embedding vectors to update
-them, and that's a single head of attention complete!
+them, and that's a single head of attention complete! (Remember that the
+matrices $Q,K,V$ are obtained by multiplying the embeddings by the corresponding
+matrices of tuneable weights $W_Q$, $W_K$, $W_V$.)
 
 Each attention block in a transformer then has multiple heads of attention
 running in parallel, each with different query, key, and value matrices. And
 this is where transformers harness the parallel computing power of GPUs. The
 reason for multiple attention heads is for the model to learn how context
 affects the meaning of the tokens in as many different ways as possible.
+
+After the attention block the embeddings are fed into a feedforward network that
+consists of two linear transformations with a ReLU activation layer between
+them. The combination of the self-attention block and feedforward block is the
+basic unit of a transformer and repeated many times.  More explicitly, a general
+transformer consists of a stack of encoder units, which have the structure just
+described, along with a set of decoder units, which are similar except they also
+have an encoder-decoder attention block. This means that the queries come from
+the previous decoder layer, but the keys and values come from the output of the
+encoder. The idea is that the encoder learns about the various connections
+between the tokens in the input text as those embedding vectors are being
+transformed, while the decoder takes those transformed embeddings to generate
+the required output text (this was the original use proposed for
+transformers---translating text from one language to another).
+
+## BERT
+
+BERT, or Bidirectional Encoder Representations from Transformers, is a kind of
+transformer that includes only the encoder, not a decoder. The word
+'bidirectional' is in the name because transformers allow all the text in a
+given input to be processed at once, and hence in any direction (left to right
+or right to left), whereas traditional RNNs can process input only in a
+specified order. The goal of BERT is to produce a transformer model able to
+learn relationships between words and sentences that can then be finetuned to a
+particular NLP task. For example, here I am finetuning BERT to turn it into a
+binary text classifier.
+
+## Project update
+
+The main difficulty here was the amount of memory and computing resources
+required; Google Colab couldn't handle 50000 samples in the corpus at the same
+time as the transformer model, so I reduced it down to 20000. Even on the GPU,
+training for five epochs would have taken more than an hour or more; but even
+with the reduced training size and only a single epoch, the model reached around
+92--96% accuracy on the validation data---a big improvement on the LSTM, CNN,
+and baseline models. It is likely that with the same amount of training data and
+the same number of epochs, the accuracy would increase even further...
+
+(Classifier based on finetuned BERT)[W7/BERT.ipynb]
 
