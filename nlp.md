@@ -4,8 +4,9 @@
 
 ---
 documentclass: report
-hyperrefoptions: linktoc=all
-indent: true
+colorlinks: true
+papersize: a4
+classoption: 12pt
 ---
 
 # Project overview and summary
