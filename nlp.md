@@ -705,5 +705,92 @@ with the reduced training size and only a single epoch, the model reached around
 and baseline models. It is likely that with the same amount of training data and
 the same number of epochs, the accuracy would increase even further...
 
-(Classifier based on finetuned BERT)[W7/BERT.ipynb]
+[Classifier based on finetuned BERT](W7/BERT.ipynb)
 
+# Week 8: Hyperperamater tuning and model comparison
+
+## Project experiments
+
+Hyperperamaters are parameters such as the batch size, learning rate, number of
+layer, the dropout rate for networks such as CNNs, and the activation function
+used between the hidden layers and on the output layer. Varying these parameters
+influences how well the model performs; but the choices are also constrained by
+the computing resources available.
+
+Throughout this project, a number of different hyperperamater configurations
+were trialed during often frustrating periods of the models not learning. This
+was particularly apparent with the CNN and LSTM models in PyTorch. In both
+cases, it was eventually the learning rate that did the trick. The learning rate
+determines how much the model's weight change in response to the cost of its
+output compared to the expected output. A familiar analogy is of a hiker walking
+down a hill in three dimensional space. The goal, of course, is to find the
+bottom of the hill (the minimum of the cost function). A large learning rate
+means that the hiker takes very large steps, sometimes overshooting the optimal
+location or oscillating between it; a low learning rate means that the hiker
+takes very small, careful steps in the direction of steepest descent down the
+hill, but because of the small steps it takes longer to reach the destination.
+
+With a default learning rate of $10^{-3}$, the original CNN model's cost
+function fluctuated around $0.69$ without any real improvement. Changing the
+learning rate to $10^{-2}$ didn't improve the model's performance. It only made
+the fluctuations in the cost more erratic. Eventually a learning rate of
+$5\times10^{-4}$ resulted in the model actually learning (although it must be
+admitted that I tinkered around so much with the model out of frustration here I
+can't be entirely sure what caused it to start working---especially since the
+Keras model was working just fine with the default learning rate).
+
+The complexity of the model also has to be considered before training. For
+example, in a CNN, how many filters are there going to be? How many
+convolutional layers before the feedforward layer or layers? Adding more filters
+and output channels to the convolutional layers, or increasing the number of
+convolutional layers, results in a more complex network; but the end result is
+that the model starts to experience overfitting after fewer epochs, with not
+much of a chance in the maximum accuracy achieved on the testing data. Of
+course, the complexity of the model is also determined by the complexity of the
+data. With my vectorised corpus consisting of a single sequence of real numbers
+as input, a single convolutional and pooling layer was enough for the model to
+achieve around 83%.
+
+With the LSTM, parameters included the number of LSTMs stacked on top of each
+other (layer depth) as well as the size of the hidden layer in each LSTM cell.
+Once the model started working (this time it didn't work because I needed to
+flatten the output of the LSTM so that all the information from the  previous
+time steps was being fed into the linear network), increasing the hidden size
+from 20 to 100 didn't result in much improvement in the training accuracy (but
+the running time definitely increased!). Similarly, using pretrained word
+embeddings increased the accuracy, but once the pretrained embeddings were
+there, increasing the layer depth or size of the hidden state didn't have as big
+of an impact.
+
+Another hyperperameter that could be varied is the number of epochs. A higher
+number of epochs is not better, because the model will be limited by the
+training data it has available. With the amount of data I had, the accuracy of
+the base LSTM model seemed to plateau after around 5-10 epochs, with overfitting
+very clear after 10 epochs. Interestingly, once the pretrained embeddings were
+increased, the testing accuracy peaked at a much earlier epoch, and then
+steadily decreased, suggesting overfitting is happening at a much earlier time. 
+Plotting the testing accuracy versus the epoch allowed me to see how the model
+performed over time and the optimal number of epochs.
+
+## Hyperperameter tuning strategies
+
+In this project I have tuned hyperperameters manually. However, there are a
+number of ways that this can be done more efficiently and automatically.
+
+A naive method is called grid search, in which all possible value of a
+hyperperamater is established and then models constructed for all those possible
+values before the best model is selected. This is, of course, inefficient.
+
+A slightly better method is random search, where instead of going through all
+possible values of the hyperperameter, specific values are selected at random
+for each iteration. This is less resource-intensive than grid search.
+
+A more advanced method is called Bayesian optimisation, in which the problem is
+treated like a mathematical optimisation problem. Here a probabilistic model is
+built that predicts the performance of the original model given a particular
+value of the hyperperameter. The probabilistic model is then improved after each
+iteration before selecting a likely value that will improve model performance
+for the next iteration.
+
+There are also tools that automate hyperperamater tuning, such as Ray Tune,
+Keras Tuner, and Google's Vertex AI.
