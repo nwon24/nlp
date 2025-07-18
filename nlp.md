@@ -794,3 +794,55 @@ for the next iteration.
 
 There are also tools that automate hyperperamater tuning, such as Ray Tune,
 Keras Tuner, and Google's Vertex AI.
+
+## Performance metrics
+
+The simplest metric of how well a model performs is its accuracy, the number of
+samples that it classifies correctly divided by the total number of samples in
+the training dataset. However, this metric can be unreliable when the dataset is
+not class balanced---that is, there are the same number of samples in each
+class. For example, if 90% of the dataset was of a particular class, the model
+could predict the same class for every input and end up with an accuracy of 90%.
+
+Therefore a more nuanced metric is desirable. One of those is the model's F1
+score. The two central ideas here are that of precision and recall. In a binary
+classification task, there are four possibilities for the output of the model:
+
+- True positive (TP)
+- True negative (TN)
+- False positive (FP)
+- False negative (FN)
+
+Precision refers to what proportion of the outputs classified as positive are
+actually positive. The total number of inputs classified as positive is the sum of
+TP and FP, and so $$\text{precision}=\frac{\text{TP}}{\text{TP}+\text{FP}}.$$
+Low precision means that the model predicts a lot of false positives.
+
+Recall refers to what proportion of the actually positive inputs were classified
+as positive. The total number of actually positive inputs is the sum of TP and
+FN, and so $$\text{recall}=\frac{\text{TP}}{\text{TP}+\text{FN}}.$$
+Low recall means that the model predicts a lot of false negatives.
+
+The F1 score is the harmonic mean of precision and recall, which turns out to be
+$$\frac{\text{TP}}{\text{TP}+(\text{FP}+\text{FN})/2}.$$
+Using the harmonic mean means that the F1 score will improve the more similar
+recall and precision are. In a perfect world, we would want both recall and
+precision to be 1---so that there are no false positive or false negatives. A
+low F1 score indicates that there is a trade-off between precision and recall.
+For example, precision may be high, meaning that the model is likely to label
+positive inputs correctly, but at the cost of low recall, meaning that if faced
+with a negative input the model is still likely to categorise it as positive.
+
+The notions of recall and precision, and hence the F1 score, are useful because
+they allow different perspectives on a model's performance in different
+scenarios. For example, in a text classification problem involving spam or
+genuine emails, users would be highly annoyed if a large number of real emails
+were blocked (low recall) even if the model does a good job of filtering out
+almost all spam emails (high precision). In this case high recall would be
+prioritised, even if precision suffers as a result. 
+
+A simple way to visualise the performance of binary classifier is a confusion
+matrix, which is 2 by 2 grid of numbers with the downward sloping daigonal being
+the number of true positives and true negatives and the other two slots being
+false positives and false negatives.
+
