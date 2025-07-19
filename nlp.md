@@ -305,6 +305,8 @@ associated with its frequency count in the text. While simple, this approach
 results in common words such as prepositions being weighted higher than other
 words that may be more important to the meaning of the document.
 
+## TF-IDF 
+
 A more complicated approach is called term frequency-inverse document frequency,
 or TF-IDF. This algorithm is applied to a collection of texts (corpus). The term
 frequency, TF, of a particular word in a particular document is $f/n$, where
@@ -325,6 +327,8 @@ The TF-IDF vectorisers found in tookits such as `sklearn` implement smoothing
 and other normalisation to change the TF-IDF scores slightly from the simplistic
 model described above, but the idea is the same.
 
+## Logistic regression
+
 Once a corpus has been vectorised, it can be fed into a classification
 algorithm. One such algorithm is called logistic regression, which is similar to
 linear regression except that the output is often binary (categorial), not
@@ -338,15 +342,63 @@ pass it to the function $$\sigma(z)=\frac{1}{1+e^{-z}}$$ which spits out a
 number between $0$ and $1$. This gives us a probability that the input belongs
 to one of the two specified classes. We can then apply a decision boundary to
 determine whether the probability is high enough for us to conclude that the
-input belongs to that category.
+input belongs to that category---for example if $\sigma(z)>0.5$ we conclude that
+the input vector belongs to the positive class.
+
+What we want is the output $\sigma(z)$ to represent the probability that $x$
+belongs to the positive class. Denote by $y$ the class that the input vector
+belongs to---that is, either $0$ or $1$. So in symbols we have
+$$P(y=1)=\sigma(z).$$
+Since the probabilities must add to $1$, we also have
+$$P(y=0)=1-\sigma(z)=\sigma(-z).$$
+
+Now we require an appropriate loss function. Remember that we require $P(y)=z$
+when $y=1$ and $P(y)=1-z$ when $y=0$; an easy way to capture this is
+$$P(y)=z^y(1-z)^{1-y}.$$ We would like the parameters in our model to maximise
+this probability. We take the logarithm of both sides: $$\log P=y\log
+z+(1-y)\log(1-z);$$ maximising this is the same as minimising $$-\log P=-y\log
+z-(1-y)\log(1-z)$$
+and this function is our loss function, called binary cross entropy loss. For
+multiple predictions, we simply take the average of the losses for each
+individual prediction.
 
 The weights and biases that go into the linear transformation of the input are
-given by stochastic gradient descent.
+learnt by stochastic gradient descent.
+
+## Support Vector Machine
 
 Another classification algorithm is called Support Vector Machine (SVM). In this
 method inputs are represented as points in $n$-dimensional space, and the idea
 is to find the hyperplane that best separates the two groups of data. This is done
 by maximising the distance between the hyperplane to its closest points.
+
+Mathematically, a hyperplane in Euclidean space is given by $$w^Tx+b=0,$$
+where, as is the usually the case, $w$ is referred to as the weights and $b$ the
+bias. If the input data is linearly separable---that is, there exists a
+hyperplane that cleanly separates the data into two classes, the SVM algorithm
+tries to find two hyperplanes that separate the two classes such that the
+distance between the two planes, the 'margin', is as large as possible.
+For example, one class can be determined by all points above the plane
+$$w^Tx+b=1$$ and the other all points below the plane $$w^Tx+b=-1.$$
+The distance between the two planes is $2/||w||$, and so the problem becomes
+that of minimising $||w||$ or $||w||^2$. However, this optimisation problem is
+subject to the constraint that no points fall into the margin. That is, if
+$y_i$, the label of the $i$th input, is $1$, for example, then we require
+$$w^Tx_i+b\ge 1,$$ and similarly if $y_i=-1$. This is summarised by the
+constraint $$y_i(w^Tx_i+b)\ge1,$$ thus turning into the problem into a
+multivariate optimisation problem with a constraint---which can possibly be
+solved using the method of Lagrange Multipliers.
+
+When the data is not linearly separable, things become messier. One way to get
+around this is to introduce a "soft margin", where some data points are allowed
+in the margin and the goal is still to maximise the distance between the planes
+but taking into account these bad points.
+
+## Project update
+
+First file is some basic experimentation with a TF-IDF pipeline in NLTK. But for
+actual use in a classification problem, I used `TFIDFVectorizer` in `sklearn`
+instead, which is a bit more advanced than the home grown method.
 
 [TF-IDF Pipeline using NLTK](W3/vectorise.ipynb)
 
