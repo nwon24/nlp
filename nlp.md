@@ -898,3 +898,79 @@ matrix, which is 2 by 2 grid of numbers with the downward sloping daigonal being
 the number of true positives and true negatives and the other two slots being
 false positives and false negatives.
 
+## Model comparision
+
+The two baseline models (logistic regression and SVM), the CNN, the LSTM, the
+LSTM with pretrained embeddings (word2vec and GloVe), and the transformer were
+all trained on a 30000 sample set, with 24000 samples dedicated to training and
+6000 samples dedicated to testing. Batch size was 50 and learning rate was
+$5\times10^{-4}$. All classifiers but the transformer were trained over 10
+epochs; due to constraints with computing resources, the transformer was trained
+over only three epochs. Each classifier was trained over all epochs, and the
+maximum accuracy it obtained selected as the accuracy of that model (as
+different models started overfitting at different epochs). Accuracy scores, F1
+scores, and confusion matrices of the results follow.
+
+|Classifier|Accuracy|F1-Score|
+|----------|--------|--------|
+|Logistic regression|85.73|86.22|
+|SVM|86.25|86.69|
+|CNN|85.25|85.56|
+|LSTM|82.00|82.50|
+|LSTM with pretrained word2vec|86.80|87.17|
+|LSTM with pretrained GloVe|87.33|87.72|
+|BERT|100|100|
+
+: Accuracy and F1 scores
+
+![Logistic regression confusion matrix](W8/CM_LR.png)
+
+![SVM confusion matrix](W8/CM_SVM.png)
+
+![CNN confusion matrix](W8/CM_CNN.png)
+
+![LSTM confusion matrix](W8/CM_LSTM.png)
+
+![LSTM with word2vec confusion matrix](W8/CM_LSTM_word2vec.png)
+
+![LSTM with GloVe confusion matrix](W8/CM_LSTM_GloVe.png)
+
+### Advantages and disadvantages
+
+The baseline models are limited by their strictly mathematical machinery. When
+applied to a text classification problem, their algorithms cannot take into
+account the nuances of context---particualrly the order of the text---that are
+so important in extracting meaning from language. However, they are also much
+easier to impelement and run without exorbitant computing resources.
+
+An advantage of CNNs over fully connected networks is their ability to
+distinguish particular features of the input with different filters, with the
+pooling layers also reducing computational complexity and the chances of
+overfitting. However, if the input to the CNN is a basic vectorised form of the
+text (such as TF-IDF), again the order of the tokens, as well as the
+relationships between the words in a particular sample, cannot be considered by
+the network.
+
+For this reasons RNNs and LSTMs quickly took over for the processing of
+sequential input. Since they process the input in time steps, LSTMs are able to
+take into account the order of the tokens. Additionally, their mechanism of
+hidden states and cell states encoding both the short and long-term memory of
+the network allows it to handle textual dependencies in a way that traditional
+feedforward networks cannot. The main limitation of LSTMs, which led to the
+development of attention and then transformers, is that their understanding of
+context arises in only dimensions, namely from the start of the sequence to the
+end; and in conjunction with the problem of vanishing gradient, this limits its
+ability to pick up on longer range textual dependencies. In addition, the
+sequential nature of the network can be a bottleneck for computation. However,
+when combined with pretrained word embeddings that are then finetuned by the
+model, LSTMs offer an improvement in performance over CNNs and the baseline
+models, as can be seen from the results.
+
+Transformers take the trophy because their self-attention mechanism is able to
+pick up on the relationships between words in any direction and over a much
+larger range. Furthermore, multi-head attention is naturally suited to parallel
+computation by GPUs, making them able to perform many more computations at once
+and thus more effectively glean the complex nuances of the input text.
+Unfortunately, without a GPU (or when one runs out of time on the GPU on Google
+Colab), a transformer is not particularly practical when it comes to the time it
+takes to train even a simple model.
