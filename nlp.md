@@ -985,3 +985,65 @@ and thus more effectively glean the complex nuances of the input text.
 Unfortunately, without a GPU (or when one runs out of time on the GPU on Google
 Colab), a transformer is not particularly practical when it comes to the time it
 takes to train even a simple model.
+
+# Challenges and future directions
+
+The biggest challenge in this project was getting the hang of both the
+theoretical side of deep learning, all the different kinds of neural networks,
+and NLP in general while also learning how to actually train those models in
+Python. Being already familiar with Python in general, I found the practical
+little easier, but it still required much head-scratching, consultation of
+documentation for `torch`, `keras`, `sklearn`, `NLTK`, and `gensim`, and more
+than occasional bouts of frustration when a model wasn't learning properly or
+there was some obscure runtime error with one of the libraries. 
+
+It was also more than a little frustrating that time on Google Colab's GPU is
+restricted, meaning that for some of the more resource intensive models I had to
+time their training so that they could be run on the GPU. Still, the restriction
+made me think more about balancing model complexity and the size of the input
+dataset with the performance of that model once it was trained, which was also a
+useful impetus to experiment with hyperperameters.
+
+Improvements I could've made include documenting most of the Jupyter Notebooks a
+little more carefully, as well as commenting on various obtuse aspects of the
+code (including randomly commented out lines that I put in during debugging).
+With the model themselves, although I trained them many times and got slightly
+different performances each time, I documented only one of those instances for
+each model in the final report, due in part to computing resource constraints
+and also in part to me not looking ahead to the summary and comparison part of
+the project at earlier stages. Having a variety of different accuracy and F1
+scores for the models would have painted a much clearer picture of how the
+models stack up against each other, although I'm happy it looks like the later,
+more advanced models outperform the earlier, simpler models.
+
+Avenues for further investigation include a more systematic analysis of how the
+hyperperamaters affect the model performance. In this project I just varied the
+hyperperameters manually, eventually settling on a set of parameters I could use
+for model comparison; a more thorough, and perhaps automated, approach would
+perhaps reveal more insight into the what the optimal peramaters might be and
+how they affect model performance in general. Increasing the number of samples
+in the training data would also make model comparison easier, since the more
+data there is the likelier the model performance will be limited by the
+intrinsic nature of the model and not the lack of training samples. Indeed, as
+the number of samples increased to 100000 the LSTMs with pretrianed embeddings,
+in particular, performed better than when the number of samples was only 20000
+or 30000. Unfortunately due to memory constraints such a large number of
+training samples could not be tested with the CNN or the transformer, and so a
+baseline of 30000 samples had to be used across all the models for comparison.
+
+Apart from varying parameters such as the batch size, number of epochs, or model
+complexity, we could look also at varying the optimiser used. In this project
+the Adam optimiser was used across all models without much of a deep dive into
+its inner workings and how it is different to stochastic gradient descent (as
+the focus was more on language processing and text classification). Learning
+more about different kinds of optimisers and which tasks they are best suited to
+should be fruitful.
+
+On the NLP side, the obvious extension to this project is multilabel
+classification, and this in turn could lead to more nuanced tasks such as
+sentiment analysis. The work on transformers also naturally leads beyond simple
+classification tasks to the realm of text generation, and clearly that is an
+exciting and rapidly-developing area of NLP in which the techniques used are
+state of the art. From my brief dive into transformers, I understand there are
+many variants on the basic transformer architecture, and this could also prove a
+worthy focus of future work.
