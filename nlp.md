@@ -59,10 +59,16 @@ time steps through LSTM cells. Initial performance was only marginally better
 than the CNN; but once pretrained embeddings were used, accuracy increased to
 just under 90%. 
 
+After using a pretrained transformer model for the text classification task, I
+devoted the final week to comparing the models for the same set of
+hyperperameters. This involved learning about accuracy metrics such as the F1
+score and how a confusion matrix can be used to visualise model performance. In
+this part of the project I also learnt about why the different models behave as
+they do and the strengths and weaknesses of each model.
 
 What follows is a project log, in which I document not only what I did but also
 my understanding of various concepts as I learnt them---including the basic
-concepts of natural language; how neural networks learn at a basic, mathematical
+concepts of natural language; how neural networks learn at a basic mathematical
 level; how Python libraries such as `torch`, `keras`, and `sklearn` can be used
 to implement models, the internal architecture and advantages or disadvantages
 of CNNs, LSTMs, and transformers; and the effect of hyperparameters on model
@@ -70,6 +76,11 @@ training and performance. All code can be found
 [here](https://github.com/nwon24/nlp) and the dataset for the text
 classification problem can be found
 [here](https://www.kaggle.com/datasets/kritanjalijain/amazon-reviews).
+(Many of the notebooks are not documented at all, because I was learning at the
+same time I was programming and any attempt to provide accurate documentation
+would have been futile because of how quickly the code was changing. The final
+two weeks' notebooks are actually documented, at least to an extent, because I
+finally felt that I was getting somewhere.)
 
 # Week 1: Introduction to NLP
 
