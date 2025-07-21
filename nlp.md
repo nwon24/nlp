@@ -922,6 +922,12 @@ maximum accuracy it obtained selected as the accuracy of that model (as
 different models started overfitting at different epochs). Accuracy scores, F1
 scores, and confusion matrices of the results follow.
 
+**Update: The transformer proved too much even for the GPU with 30000 samples.
+The accuracy listed in the table is from the week 7 results---and no F1 score or
+confusion matrix was created for it because it was before I learnt about them!
+The accuracy is approximate because I ran out of computing resources and had to
+abort the training/testing.**
+
 |Classifier|Accuracy|F1-Score|
 |----------|--------|--------|
 |Logistic regression|85.73|86.22|
@@ -930,7 +936,7 @@ scores, and confusion matrices of the results follow.
 |LSTM|82.00|82.50|
 |LSTM with pretrained word2vec|86.80|87.17|
 |LSTM with pretrained GloVe|87.33|87.72|
-|BERT|100|100|
+|BERT|approx. 93|-|
 
 : Accuracy and F1 scores
 
