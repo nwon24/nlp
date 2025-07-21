@@ -28,7 +28,7 @@ deep learning models.
 
 The bulk of the project consisted of implementing different neural networks for
 text classification and comparing their performance across different training
-data sizes, hyperperamaters, and network depth. These networks included a
+data sizes, hyperparameters, and network depth. These networks included a
 one-dimensional CNN, an LSTM, an LSTM with pretrained word embeddings using both
 Word2Vec and GloVe, and then finally a pretrained BERT. The corpus used
 throughout was a set of Amazon reviews of various products, classified as either
@@ -40,7 +40,7 @@ Throughout the project the goal was to increase the performance of the various
 models. The baseline models were around 85% accurate on validation test data,
 with initial feed-forward networks and CNNs underperforming in comparison. This
 was likely due to not enough training samples (limited by the computing
-environment), the requirement for simple networks (again limietd by computing
+environment), the requirement for simple networks (again limited by computing
 environment), and unoptimised hyperparameters. Additionally, it was found that
 traditional neural networks are unable to take into account the text as a
 sequence of tokens, and as context plays a heavy role in the meaning of language
@@ -61,13 +61,13 @@ just under 90%.
 
 After using a pretrained transformer model for the text classification task, I
 devoted the final week to comparing the models for the same set of
-hyperperameters. This involved learning about accuracy metrics such as the F1
+hyperparameters. This involved learning about accuracy metrics such as the F1
 score and how a confusion matrix can be used to visualise model performance. In
-this part of the project I also learnt about why the different models behave as
+this part of the project I also learned about why the different models behave as
 they do and the strengths and weaknesses of each model.
 
 What follows is a project log, in which I document not only what I did but also
-my understanding of various concepts as I learnt them---including the basic
+my understanding of various concepts as I learned them---including the basic
 concepts of natural language; how neural networks learn at a basic mathematical
 level; how Python libraries such as `torch`, `keras`, and `sklearn` can be used
 to implement models, the internal architecture and advantages or disadvantages
@@ -84,9 +84,9 @@ finally felt that I was getting somewhere.)
 
 # Week 1: Introduction to NLP
 
-Natural Language Processing (NLP) uses artifical intelligence to
+Natural Language Processing (NLP) uses artificial intelligence to
 understand and generate text in human languages. NLP is already
-ubiquitious in everyday life, whether it be with voice-powered
+ubiquitous in everyday life, whether it be with voice-powered
 assistants and online chatbots. What's exciting about NLP is its
 potential to extend into the realm of sentiment analysis---that is,
 its ability to analyse and recognise emotions, feelings, sarcasm,
@@ -102,7 +102,7 @@ processing.
 - Stop words: repeated words that don't add much to meaning and are
 usually featured out (e.g., 'in', 'as', 'of')
 - Stemming: reducing words to their root
-- Lematizing: reducing words to their core meaning (e.g., best -> good)
+- Lemmatizing: reducing words to their core meaning (e.g., best -> good)
 - Chuncking: breaking up text into phrases---often the meaning of
 individual words doesn't bear much relation to the phrase that it's
 in
@@ -183,7 +183,7 @@ is a dog or not.
 ## Gradient descent and backpropagation
 
 Initially, the weights and biases of a network are random, and so its output is
-basically guaranteed to be nonsese. So how does the network learn? 
+basically guaranteed to be nonsense. So how does the network learn? 
 
 The idea is to treat the network has a function of an enormous number of
 variables---one for each weight and bias. This is because the weights and biases
@@ -226,7 +226,7 @@ To actually compute the gradient of a function with so many variables, an
 algorithm called backpropagation is used. Conceptually, this means starting by
 calculating the partial derivatives with respect to the weights, biases, and
 activations in the final layer, and then using those values to calculate the
-partial derivatives of the previoius layer, and so on.
+partial derivatives of the previous layer, and so on.
 
 Let's go back to the equation
 $$x^{i+1}_k=f\left(\sum_{t=1}^{n_{i}} x^i_tw^i_t+b^{i+1}_k\right).$$
@@ -285,11 +285,11 @@ initialised with an instance of the `Sequential` class that makes it easy to
 define a sequential series of layers for the data to be fed through.
 Use `nn.linear` to create a module that applies a linear transformation to the
 input data.
-- Choose a loss and paramter optimisation function.
+- Choose a loss and parameter optimisation function.
 - To train the model, enumerate the training data dataloader (which will come in
   batches of the batch size), calculate `cost` using the loss function and then
 use `cost.backward()` to calculate the gradient with respect to each parameter
-in the model. The `step` method of the optimiser then updates the paramters. Use
+in the model. The `step` method of the optimiser then updates the parameters. Use
 the `zero_grad` method of the optimiser to reset the gradient---otherwise it
 accumulates.
 - To test the model, use `torch.no_grad`  to ensure no gradients are computed.
@@ -334,7 +334,7 @@ document but not the others will be given a higher weighting, and this is
 appropriate because it's much more likely that word is significant to the
 meaning of that document.
 
-The TF-IDF vectorisers found in tookits such as `sklearn` implement smoothing
+The TF-IDF vectorisers found in toolkits such as `sklearn` implement smoothing
 and other normalisation to change the TF-IDF scores slightly from the simplistic
 model described above, but the idea is the same.
 
@@ -342,8 +342,8 @@ model described above, but the idea is the same.
 
 Once a corpus has been vectorised, it can be fed into a classification
 algorithm. One such algorithm is called logistic regression, which is similar to
-linear regression except that the output is often binary (categorial), not
-continous. This is useful, for example, in classifying whether an email is spam
+linear regression except that the output is often binary (categorical), not
+continuous. This is useful, for example, in classifying whether an email is spam
 or not, or whether a movie review is positive or negative.
 
 The idea is to take an input vector, say $x$, and then apply a linear
@@ -509,7 +509,7 @@ the processing of one piece of the input (e.g., the next word). The processing
 of each piece of input is done by 'cells.' The idea behind a RNN is that each
 cell accepts the next piece of input and produces an output called the 'hidden
 state' that is then fed into the next cell, taking into account its memory of
-what has occured in the previous time steps. As with CNNs, the output of the
+what has occurred in the previous time steps. As with CNNs, the output of the
 recurrent layers is fed into a dense layer that spits out the output required by
 the network.
 
@@ -531,7 +531,7 @@ way to solve this problem.
 First I used a vectoriser to create a dictionary of unique words in the corpus,
 assigning to each word an integer or index. Then I converted each piece of text
 into an array of indices to represent the words, padding them to be the same
-length as the longest review. This could be passsed directly into a network, but
+length as the longest review. This could be passed directly into a network, but
 no success was achieved. :(
 
 Then I found out about embeddings, which are a way of converting those arrays of
@@ -606,7 +606,7 @@ same operations again.
 ## Project update
 
 Finally got the homebaked LSTM to work---accuracy approximately 82%. I needed to
-flatten the output of the LSTM differently so that all timesteps was passed to the
+flatten the output of the LSTM differently so that all time steps was passed to the
 dense layer; with this fix somehow the model started to actually train.
 
 [Text classifier using LSTM in PyTorch and Keras](W5/LSTM.ipynb)
@@ -631,9 +631,9 @@ I grabbed Google's massive pretrained Word2Vec embeddings and loaded them into
 my LSTM model using `nn.Embedding.from_pretrained`. I also collected validation
 test data for the different epochs to make a plot. With the pretrained
 embeddings and setting the `freeze` parameter to `False` (allowing the
-pretrained embeddings to be upated during the training of the model), the
-validation test accuracy creeped up to around 89%. With the same set of samples
-and values for the hyperamaters the vanilla LSTM model from last week only got
+pretrained embeddings to be updated during the training of the model), the
+validation test accuracy crept up to around 89%. With the same set of samples
+and values for the hyperparameters the vanilla LSTM model from last week only got
 up to around 86%. 
 
 TODO: try larger number of samples (if it doesn't crash Google Colab) and
@@ -641,17 +641,17 @@ pretrained embeddings using other methods (e.g., GloVe).
 
 Update: somehow 100000 samples is no longer too much for the runtime. However,
 the results for this were similar---maximum accuracy remained around 89% for
-the same set of hyperperameters.
+the same set of hyperparameters.
 
 [LSTM with pretrained Word2Vec Embedding](W6/LSTM_WordEmbeddings.ipynb)
 
 ## GloVe
 
 GloVe (Global Vectors) is an extension to the Word2Vec method. In addition to
-the usual algorithm, a large co-occurence matrix is maintained, in which the
+the usual algorithm, a large co-occurrence matrix is maintained, in which the
 entries count how many times each word appears next to every other word in the
 corpus (or in the context window for window sizes greater than unity). If we let
-this co-occurence count be $X_{ij}$ for words $i$ and $j$, then the algorithm
+this co-occurrence count be $X_{ij}$ for words $i$ and $j$, then the algorithm
 tries to minimise the function $$J=\sum_{i,j}f(X_{ij})(w_i\cdot
 w_j+b_i+b_j-\log(X_{ij}))^2,$$
 where $w_i$ and $w_j$ are the embedding vectors (weights) for the words and $f$
@@ -699,7 +699,7 @@ how strongly queries are answered by particular keys. For some obscure reason,
 in the original paper, this matrix is scaled down by $\sqrt{d_k}$, the dimension
 of the query/key space (a user-supplied parameter).
 
-Since the numbers in this attention matrix can be arbitrarity large, they are
+Since the numbers in this attention matrix can be arbitrarily large, they are
 then passed column wise into the $\text{softmax}$ function, which turns each
 column into a probability distribution. This distribution can be thought of as
 expressing how likely a particular key is to answer a particular query. These
@@ -723,7 +723,7 @@ where $d_k$ is the number of dimensions in the query/key space.
 The columns of this output are then added to the embedding vectors to update
 them, and that's a single head of attention complete! (Remember that the
 matrices $Q,K,V$ are obtained by multiplying the embeddings by the corresponding
-matrices of tuneable weights $W_Q$, $W_K$, $W_V$.)
+matrices of tunable weights $W_Q$, $W_K$, $W_V$.)
 
 Each attention block in a transformer then has multiple heads of attention
 running in parallel, each with different query, key, and value matrices. And
@@ -753,8 +753,8 @@ transformer that includes only the encoder, not a decoder. The word
 given input to be processed at once, and hence in any direction (left to right
 or right to left), whereas traditional RNNs can process input only in a
 specified order. The goal of BERT is to produce a transformer model able to
-learn relationships between words and sentences that can then be finetuned to a
-particular NLP task. For example, here I am finetuning BERT to turn it into a
+learn relationships between words and sentences that can then be fine-tuned to a
+particular NLP task. For example, here I am fine-tuning BERT to turn it into a
 binary text classifier.
 
 ## Project update
@@ -768,20 +768,20 @@ with the reduced training size and only a single epoch, the model reached around
 and baseline models. It is likely that with the same amount of training data and
 the same number of epochs, the accuracy would increase even further...
 
-[Classifier based on finetuned BERT](W7/BERT.ipynb)
+[Classifier based on fine-tuned BERT](W7/BERT.ipynb)
 
-# Week 8: Hyperperamater tuning and model comparison
+# Week 8: Hyperparameter tuning and model comparison
 
 ## Project experiments
 
-Hyperperamaters are parameters such as the batch size, learning rate, number of
+Hyperparameters are parameters such as the batch size, learning rate, number of
 layer, the dropout rate for networks such as CNNs, and the activation function
 used between the hidden layers and on the output layer. Varying these parameters
 influences how well the model performs; but the choices are also constrained by
 the computing resources available.
 
-Throughout this project, a number of different hyperperamater configurations
-were trialed during often frustrating periods of the models not learning. This
+Throughout this project, a number of different hyperparameter configurations
+were tried during often frustrating periods of the models not learning. This
 was particularly apparent with the CNN and LSTM models in PyTorch. In both
 cases, it was eventually the learning rate that did the trick. The learning rate
 determines how much the model's weight change in response to the cost of its
@@ -825,7 +825,7 @@ embeddings increased the accuracy, but once the pretrained embeddings were
 there, increasing the layer depth or size of the hidden state didn't have as big
 of an impact.
 
-Another hyperperameter that could be varied is the number of epochs. A higher
+Another hyperparameter that could be varied is the number of epochs. A higher
 number of epochs is not better, because the model will be limited by the
 training data it has available. With the amount of data I had, the accuracy of
 the base LSTM model seemed to plateau after around 5-10 epochs, with overfitting
@@ -835,27 +835,27 @@ steadily decreased, suggesting overfitting is happening at a much earlier time.
 Plotting the testing accuracy versus the epoch allowed me to see how the model
 performed over time and the optimal number of epochs.
 
-## Hyperperameter tuning strategies
+## Hyperparameter tuning strategies
 
-In this project I have tuned hyperperameters manually. However, there are a
+In this project I have tuned hyperparameters manually. However, there are a
 number of ways that this can be done more efficiently and automatically.
 
 A naive method is called grid search, in which all possible value of a
-hyperperamater is established and then models constructed for all those possible
+hyperparameter is established and then models constructed for all those possible
 values before the best model is selected. This is, of course, inefficient.
 
 A slightly better method is random search, where instead of going through all
-possible values of the hyperperameter, specific values are selected at random
+possible values of the hyperparameter, specific values are selected at random
 for each iteration. This is less resource-intensive than grid search.
 
 A more advanced method is called Bayesian optimisation, in which the problem is
 treated like a mathematical optimisation problem. Here a probabilistic model is
 built that predicts the performance of the original model given a particular
-value of the hyperperameter. The probabilistic model is then improved after each
+value of the hyperparameter. The probabilistic model is then improved after each
 iteration before selecting a likely value that will improve model performance
 for the next iteration.
 
-There are also tools that automate hyperperamater tuning, such as Ray Tune,
+There are also tools that automate hyperparameter tuning, such as Ray Tune,
 Keras Tuner, and Google's Vertex AI.
 
 ## Performance metrics
@@ -905,11 +905,11 @@ almost all spam emails (high precision). In this case high recall would be
 prioritised, even if precision suffers as a result. 
 
 A simple way to visualise the performance of binary classifier is a confusion
-matrix, which is 2 by 2 grid of numbers with the downward sloping daigonal being
+matrix, which is 2 by 2 grid of numbers with the downward sloping diagonal being
 the number of true positives and true negatives and the other two slots being
 false positives and false negatives.
 
-## Model comparision
+## Model comparison
 
 The two baseline models (logistic regression and SVM), the CNN, the LSTM, the
 LSTM with pretrained embeddings (word2vec and GloVe), and the transformer were
@@ -950,9 +950,9 @@ scores, and confusion matrices of the results follow.
 
 The baseline models are limited by their strictly mathematical machinery. When
 applied to a text classification problem, their algorithms cannot take into
-account the nuances of context---particualrly the order of the text---that are
+account the nuances of context---particularly the order of the text---that are
 so important in extracting meaning from language. However, they are also much
-easier to impelement and run without exorbitant computing resources.
+easier to implement and run without exorbitant computing resources.
 
 An advantage of CNNs over fully connected networks is their ability to
 distinguish particular features of the input with different filters, with the
@@ -973,7 +973,7 @@ context arises in only dimensions, namely from the start of the sequence to the
 end; and in conjunction with the problem of vanishing gradient, this limits its
 ability to pick up on longer range textual dependencies. In addition, the
 sequential nature of the network can be a bottleneck for computation. However,
-when combined with pretrained word embeddings that are then finetuned by the
+when combined with pretrained word embeddings that are then fine-tuned by the
 model, LSTMs offer an improvement in performance over CNNs and the baseline
 models, as can be seen from the results.
 
@@ -1002,7 +1002,7 @@ restricted, meaning that for some of the more resource intensive models I had to
 time their training so that they could be run on the GPU. Still, the restriction
 made me think more about balancing model complexity and the size of the input
 dataset with the performance of that model once it was trained, which was also a
-useful impetus to experiment with hyperperameters.
+useful impetus to experiment with hyperparameters.
 
 Improvements I could've made include documenting most of the Jupyter Notebooks a
 little more carefully, as well as commenting on various obtuse aspects of the
@@ -1017,15 +1017,15 @@ models stack up against each other, although I'm happy it looks like the later,
 more advanced models outperform the earlier, simpler models.
 
 Avenues for further investigation include a more systematic analysis of how the
-hyperperamaters affect the model performance. In this project I just varied the
-hyperperameters manually, eventually settling on a set of parameters I could use
+hyperparameters affect the model performance. In this project I just varied the
+hyperparameters manually, eventually settling on a set of parameters I could use
 for model comparison; a more thorough, and perhaps automated, approach would
-perhaps reveal more insight into the what the optimal peramaters might be and
+perhaps reveal more insight into the what the optimal parameters might be and
 how they affect model performance in general. Increasing the number of samples
 in the training data would also make model comparison easier, since the more
 data there is the likelier the model performance will be limited by the
 intrinsic nature of the model and not the lack of training samples. Indeed, as
-the number of samples increased to 100000 the LSTMs with pretrianed embeddings,
+the number of samples increased to 100000 the LSTMs with pretrained embeddings,
 in particular, performed better than when the number of samples was only 20000
 or 30000. Unfortunately due to memory constraints such a large number of
 training samples could not be tested with the CNN or the transformer, and so a
@@ -1039,7 +1039,7 @@ the focus was more on language processing and text classification). Learning
 more about different kinds of optimisers and which tasks they are best suited to
 should be fruitful.
 
-On the NLP side, the obvious extension to this project is multilabel
+On the NLP side, the obvious extension to this project is multi-label
 classification, and this in turn could lead to more nuanced tasks such as
 sentiment analysis. The work on transformers also naturally leads beyond simple
 classification tasks to the realm of text generation, and clearly that is an
