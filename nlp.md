@@ -911,6 +911,8 @@ false positives and false negatives.
 
 ## Model comparison
 
+[Summary and comparision of all models](W8/models.ipynb)
+
 The two baseline models (logistic regression and SVM), the CNN, the LSTM, the
 LSTM with pretrained embeddings (word2vec and GloVe), and the transformer were
 all trained on a 30000 sample set, with 24000 samples dedicated to training and
