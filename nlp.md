@@ -913,22 +913,28 @@ false positives and false negatives.
 
 [Summary and comparision of all models](W8/models.ipynb)
 
-The two baseline models (logistic regression and SVM), the CNN, the LSTM, the
-LSTM with pretrained embeddings (word2vec and GloVe), and the transformer were
-all trained on a 30000 sample set, with 24000 samples dedicated to training and
-6000 samples dedicated to testing. Batch size was 50 and learning rate was
-$5\times10^{-4}$. All classifiers but the transformer were trained over 10
-epochs; due to constraints with computing resources, the transformer was trained
-over only three epochs. Each classifier was trained over all epochs, and the
-maximum accuracy it obtained selected as the accuracy of that model (as
-different models started overfitting at different epochs). Accuracy scores, F1
-scores, and confusion matrices of the results follow.
+[BERT model](W8/BERT_for_W8.ipynb)
 
-**Update: The transformer proved too much even for the GPU with 30000 samples.
-The accuracy listed in the table is from the week 7 results---and no F1 score or
-confusion matrix was created for it because it was before I learnt about them!
-The accuracy is approximate because I ran out of computing resources and had to
-abort the training/testing.**
+(Although the BERT model was implemented in the first file, somehow the runtime
+kept running out of memory; so I had to adapt the code from week 7.)
+
+The two baseline models (logistic regression and SVM), the CNN, the LSTM, and
+the LSTM with pretrained embeddings (word2vec and GloVe) were all trained on a
+30000 sample set, with 24000 samples dedicated to training and 6000 samples
+dedicated to testing. The batch size was 50 and the learning rate was
+$5\times10^{-4}$. All of those classifiers were trained over 10 epochs, with the
+F1 scores and confusion matrices computed from the epoch with the maximum
+accuracy (since different models began experiencing overfitting at different
+epochs). 
+
+Due to constraints with computing resources, the transformer was trained over
+only a single epoch with 20000 samples---16000 samples devoted to trainig and
+4000 samples for testing. Additionally, after experimentation it turns out that
+the transformer requires a smaller learning rate of $10^{-5}$ to train. However,
+as can be seen from the table below, even with fewer training samples and
+epochs, the transformer still comfortably outperformed all the other models.
+
+Accuracy scores, F1 scores, and confusion matrices of the results follow.
 
 |Classifier|Accuracy|F1-Score|
 |----------|--------|--------|
@@ -938,7 +944,7 @@ abort the training/testing.**
 |LSTM|82.00|82.50|
 |LSTM with pretrained word2vec|86.80|87.17|
 |LSTM with pretrained GloVe|87.33|87.72|
-|BERT|approx. 93|-|
+|BERT|92.30|92.09|
 
 : Accuracy and F1 scores
 
@@ -953,6 +959,8 @@ abort the training/testing.**
 ![LSTM with word2vec confusion matrix](W8/CM_LSTM_word2vec.png)
 
 ![LSTM with GloVe confusion matrix](W8/CM_LSTM_GloVe.png)
+
+![BERT confusion matrix](W8/CM_BERT.png)
 
 ### Advantages and disadvantages
 
