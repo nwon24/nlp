@@ -29,7 +29,7 @@ deep learning models.
 The bulk of the project consisted of implementing different neural networks for
 text classification and comparing their performance across different training
 data sizes, hyperparameters, and network depth. These networks included a
-one-dimensional CNN, an LSTM, an LSTM with pretrained word embeddings using both
+one-dimensional CNN, a LSTM, a LSTM with pretrained word embeddings using both
 Word2Vec and GloVe, and then finally a pretrained BERT. The corpus used
 throughout was a set of Amazon reviews of various products, classified as either
 positive or negative reviews. The entire corpus being much too large to fit into
@@ -70,7 +70,7 @@ What follows is a project log, in which I document not only what I did but also
 my understanding of various concepts as I learned them---including the basic
 concepts of natural language; how neural networks learn at a basic mathematical
 level; how Python libraries such as `torch`, `keras`, and `sklearn` can be used
-to implement models, the internal architecture and advantages or disadvantages
+to implement models; the internal architecture and advantages or disadvantages
 of CNNs, LSTMs, and transformers; and the effect of hyperparameters on model
 training and performance. All code can be found
 [here](https://github.com/nwon24/nlp) and the dataset for the text
