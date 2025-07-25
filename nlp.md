@@ -566,8 +566,10 @@ three pieces of data are fed through three 'gates':
 ### The forget gate
 
 To ease notation, denote by $L(x)$ a linear transformation of the vector $x$
-with a set of weights and a bias. Pointwise multiplication is denoted by
-$\otimes$ and pointwise addition is denoted by $\oplus$.
+with a set of weights and a bias (noting, naturally, that different linear
+transformations will have their own set of weights and biases). Pointwise
+multiplication is denoted by $\otimes$ and pointwise addition is denoted by
+$\oplus$.
 
 The computation for this gate is $$f_t=\sigma(L(x_t)+L(h_{t-1})).$$
 The values in $f_i$ are between $0$ and $1$, and so multiplying this with $c_t$
